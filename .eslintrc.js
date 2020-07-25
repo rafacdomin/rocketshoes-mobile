@@ -2,7 +2,7 @@ module.exports = {
   env: {
     es6: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', 'prettier', 'prettier/react'],
+  extends: ['airbnb', 'prettier', 'prettier/react'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -12,7 +12,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 11,
     sourceType: 'module',
   },
   plugins: ['react', 'prettier'],
@@ -25,6 +25,9 @@ module.exports = {
       },
     ],
     'import/prefer-default-export': 'off',
+    'react/state-in-constructor': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'react/static-property-placement': 'off',
+    'eslint/no-param-reassign': 'off',
   },
 };

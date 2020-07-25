@@ -11,7 +11,7 @@ export const Container = styled.View`
   background: #f2f2f2;
   border-radius: 4px;
   padding: 22px 15px 10px;
-  height: 550px;
+  max-height: 550px;
 `;
 
 export const Product = styled.View`
@@ -31,6 +31,7 @@ export const ProductImage = styled.Image`
 
 export const ProductInfo = styled.View`
   margin-left: 10px;
+  max-width: 200px;
 `;
 
 export const ProductName = styled.Text`
@@ -60,6 +61,8 @@ export const Amount = styled.View`
 `;
 
 export const Btn = styled(RectButton)``;
+
+export const RemoveButton = styled(RectButton)``;
 
 export const InputAmount = styled.Text`
   background: #f2f2f2;

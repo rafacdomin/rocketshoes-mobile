@@ -33,7 +33,7 @@ export const Price = styled.Text`
   color: #000;
   font-weight: bold;
   font-size: 21px;
-  margin-top: 5px;
+  margin-top: auto;
 `;
 
 export const AddButton = styled(RectButton)`

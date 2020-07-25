@@ -1,45 +1,87 @@
 import React from 'react';
-import { FlatList } from 'react-native';
 
-import { Container, List, ListItem, Photo, Title, Price, ButtonAmount, AddButton, ButtonText } from './styles';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as CartActions from '../../store/modules/cart/actions';
+
+import { FlatList } from 'react-native';
+import {
+  Container,
+  List,
+  ListItem,
+  Photo,
+  Title,
+  Price,
+  ButtonAmount,
+  AddButton,
+  ButtonText,
+} from './styles';
+
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
 class Home extends React.Component {
   state = {
     products: [],
   };
 
-  renderProduct = () => {
+  async componentDidMount() {
+    const response = await api.get('/products');
+
+    const data = response.data.map((product) => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
+
+    this.setState({
+      products: data,
+    });
+  }
+
+  renderProduct = ({ item }) => {
+    const { amount, addToCartRequest } = this.props;
+
     return (
-      <ListItem>
-        <Photo
-          source={{
-            uri:
-              'https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_detalhe1.jpg?ts=1571078789?ims=280x280',
-          }}
-        />
-        <Title>Tenis Legal</Title>
-        <Price>R$20,00</Price>
-        <AddButton>
-          <ButtonAmount>1</ButtonAmount>
+      <ListItem key={item.id}>
+        <Photo source={{ uri: item.image }} />
+        <Title>{item.title}</Title>
+        <Price>{item.priceFormatted}</Price>
+        <AddButton onPress={() => addToCartRequest(item.id)}>
+          <ButtonAmount>{amount[item.id] || 0}</ButtonAmount>
           <ButtonText>ADICIONAR</ButtonText>
         </AddButton>
       </ListItem>
     );
   };
 
-  render(){
+  render() {
+    const { products } = this.state;
+
     return (
       <Container>
         <List>
-        <FlatList
-          horizontal
-          data={[{ key: 'a' }, { key: 'b' }, { key: 'c' }, { key: 'd' }]}
-          renderItem={this.renderProduct}
-        />
+          <FlatList
+            horizontal
+            data={products}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={this.renderProduct}
+          />
         </List>
       </Container>
-    )
+    );
   }
-};
+}
 
-export default Home;
+const mapStateToProps = (state) => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+
+    return amount;
+  }, {}),
+});
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
