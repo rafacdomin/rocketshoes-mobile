@@ -1,4 +1,4 @@
-# RocketShoes Mobile:rocket:
+# RocketShoes Mobile :rocket:
 React Native e-commerce project developed on [RocketSeat GoStack Bootcamp](https://rocketseat.com.br/bootcamp). Check the [Web version](https://github.com/rafacdomin/rocketshoes-web) made with ReacJS. 
 
 ## About
