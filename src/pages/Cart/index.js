@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -31,13 +30,30 @@ import {
 
 import { formatPrice } from '../../util/format';
 
-function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+function Cart() {
+  const cart = useSelector((state) =>
+    state.cart.map((product) => ({
+      ...product,
+      subtotal: formatPrice(product.amount * product.price),
+    }))
+  );
+
+  const total = useSelector((state) =>
+    formatPrice(
+      state.cart.reduce((totalSum, product) => {
+        return totalSum + product.price * product.amount;
+      }, 0)
+    )
+  );
+
+  const dispatch = useDispatch();
+
   function incrementAmount(product) {
-    updateAmountRequest(product.id, product.amount + 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
   }
 
   function decrementAmount(product) {
-    updateAmountRequest(product.id, product.amount - 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
   }
 
   function renderProduct({ item }) {
@@ -53,7 +69,8 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
             <ProductName>{item.title}</ProductName>
             <ProductPrice>{item.priceFormatted}</ProductPrice>
           </ProductInfo>
-          <RemoveButton onPress={() => removeFromCart(item.id)}>
+          <RemoveButton
+            onPress={() => dispatch(CartActions.removeFromCart(item.id))}>
             <Icon name="delete" size={20} color="#7259c1" />
           </RemoveButton>
         </ProductBody>
@@ -101,19 +118,4 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  cart: state.cart.map((product) => ({
-    ...product,
-    subtotal: formatPrice(product.amount * product.price),
-  })),
-  total: formatPrice(
-    state.cart.reduce((total, product) => {
-      return total + product.price * product.amount;
-    }, 0)
-  ),
-});
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(CartActions, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default Cart;
