@@ -14,7 +14,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.7.1",
     "@react-navigation/stack": "^5.7.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "immer": "^7.0.7",
     "intl": "^1.2.5",
     "prop-types": "^15.7.2",
